@@ -1,0 +1,57 @@
+﻿<Window x:Class="TimeTimer_WPF_.AlarmSet"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TimeTimer_WPF_"
+        mc:Ignorable="d" Title="AlarmSet" Height="495" Width="420" Closed="Window_Closed" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="#FFFEFEFF">
+
+    <Window.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Window.Effect>
+        <DropShadowEffect RenderingBias="Performance" Opacity="0.3" BlurRadius="10" ShadowDepth="6"/>
+    </Window.Effect>
+    <Grid x:Name="alarmgrid" Focusable="True" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label Content="알람 설정" HorizontalAlignment="Center" VerticalAlignment="Top" Height="46" Width="420" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="30" FontWeight="Normal" Margin="0,1,0,0" PreviewMouseLeftButtonDown="Label_PreviewMouseLeftButtonDown"/>
+        <Label x:Name="alarm_Hour" Content="11" HorizontalAlignment="Left" Margin="104,47,0,0" VerticalAlignment="Top" Height="90" Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FlowDirection="LeftToRight" FontWeight="Bold" FontSize="72" ScrollViewer.VerticalScrollBarVisibility="Disabled" PreviewMouseWheel="alarm_Hour_PreviewMouseWheel"/>
+        <Label x:Name="am_pm" Content="오전" HorizontalAlignment="Left" Margin="32,76,0,0" VerticalAlignment="Top" Height="50" FontSize="30" Width="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Top"/>
+        <Label Content="시" HorizontalAlignment="Left" Margin="208,92,0,0" VerticalAlignment="Top" Height="38" FontSize="24"/>
+        <Label x:Name="alarm_Minute" Content="23" HorizontalAlignment="Left" Margin="252,47,0,0" VerticalAlignment="Top" Height="90" Width="100" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FlowDirection="LeftToRight" FontWeight="Bold" FontSize="72" ScrollViewer.VerticalScrollBarVisibility="Disabled" PreviewMouseWheel="alarm_Minute_PreviewMouseWheel"/>
+        <Label Content="분" HorizontalAlignment="Left" Margin="356,94,0,0" VerticalAlignment="Top" Height="37" FontSize="24"/>
+        <Label x:Name="alarm_Apply" Content="추가" HorizontalAlignment="Left" Height="91" Margin="0,404,0,0" VerticalAlignment="Top" Width="210" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="#FFE6F4FF" Focusable="True" MouseLeftButtonDown="alarm_Apply_MouseLeftButtonDown"/>
+        <Label x:Name="alarm_Cancel" Content="취소" HorizontalAlignment="Left" Height="91" Margin="210,404,0,0" VerticalAlignment="Top" Width="210" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="#FFFFEBF6" MouseLeftButtonDown="alarm_Cancel_MouseLeftButtonDown" Focusable="True"/>
+        <Label x:Name="onceBtn" Content="한 번" HorizontalAlignment="Left" Height="50" Margin="0,294,0,0" VerticalAlignment="Top" Width="105" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Background="#FFB7B7B7" MouseLeftButtonDown="onceBtn_MouseLeftButtonDown" Focusable="True"/>
+        <Label x:Name="everydayBtn" Content="매일" HorizontalAlignment="Left" Height="50" Margin="105,294,0,0" VerticalAlignment="Top" Width="105" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" MouseLeftButtonDown="everydayBtn_MouseLeftButtonDown" Focusable="True"/>
+        <Label x:Name="weekdayBtn" Content="평일" HorizontalAlignment="Left" Height="50" Margin="210,294,0,0" VerticalAlignment="Top" Width="105" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" MouseLeftButtonDown="weekdayBtn_MouseLeftButtonDown" Focusable="True"/>
+        <Label x:Name="dow_SelectBtn" Content="요일선택" HorizontalAlignment="Left" Height="50" Margin="315,294,0,0" VerticalAlignment="Top" Width="105" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" MouseLeftButtonDown="dow_SelectBtn_MouseLeftButtonDown" Focusable="True"/>
+        <Grid x:Name="dowSelectPanel" HorizontalAlignment="Center" Height="60" Margin="0,344,0,0" VerticalAlignment="Top" Width="420" ScrollViewer.VerticalScrollBarVisibility="Disabled" Visibility="Hidden">
+            <Label x:Name="mon" Content="월" HorizontalAlignment="Left" VerticalAlignment="Center" Width="60" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="24" Background="#19DCDCDC" Padding="5,5,5,5" Height="60" MouseEnter="mon_MouseEnter" MouseLeftButtonDown="mon_MouseLeftButtonDown"/>
+            <Label x:Name="tue" Content="화" HorizontalAlignment="Left" VerticalAlignment="Center" Width="60" Margin="60,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="24" Background="#19DCDCDC" Height="60" MouseEnter="tue_MouseEnter" MouseLeftButtonDown="tue_MouseLeftButtonDown"/>
+            <Label x:Name="wed" Content="수" HorizontalAlignment="Left" VerticalAlignment="Center" Width="60" Margin="120,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="24" Background="#19DCDCDC" Height="60" MouseEnter="we_MouseEnter" MouseLeftButtonDown="wed_MouseLeftButtonDown"/>
+            <Label x:Name="thu" Content="목" HorizontalAlignment="Center" VerticalAlignment="Center" Width="60" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="24" Background="#19DCDCDC" Height="60" MouseEnter="thu_MouseEnter" MouseLeftButtonDown="thu_MouseLeftButtonDown"/>
+            <Label x:Name="fri" Content="금" HorizontalAlignment="Left" VerticalAlignment="Center" Width="60" Margin="240,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="24" Background="#19DCDCDC" Height="60" MouseEnter="fri_MouseEnter" MouseLeftButtonDown="fri_MouseLeftButtonDown"/>
+            <Label x:Name="sat" Content="토" HorizontalAlignment="Left" VerticalAlignment="Center" Width="60" Margin="300,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="24" Background="#19B1D2FF" Height="60" MouseEnter="sat_MouseEnter" MouseLeftButtonDown="sat_MouseLeftButtonDown"/>
+            <Label x:Name="sun" Content="일" HorizontalAlignment="Left" VerticalAlignment="Center" Width="60" Margin="360,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="24" Background="#19FFABAB" Height="60" MouseEnter="sun_MouseEnter" MouseLeftButtonDown="sun_MouseLeftButtonDown"/>
+        </Grid>
+        <Rectangle HorizontalAlignment="Left" Height="90" Margin="252,47,0,0" VerticalAlignment="Top" Width="50" PreviewMouseWheel="Rectangle_PreviewMouseWheel" Fill="#03FFFFFF" Grid.RowSpan="1"/>
+        <Label x:Name="alarmTitle_label" Content="알람 제목" HorizontalAlignment="Center" VerticalAlignment="Top" Height="54" Width="420" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="24" Background="{x:Null}" Foreground="#FFA0A0A0" Margin="0,147,0,0"/>
+        <TextBox x:Name="alarm_Title" HorizontalAlignment="Center" Margin="0,147,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="420" Height="54" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="24" Background="{x:Null}" GotFocus="alarm_Title_GotFocus" LostFocus="alarm_Title_LostFocus"/>
+        <TextBox x:Name="command_box" HorizontalAlignment="Center" Height="33" Margin="0,256,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="420" FontSize="20"/>
+
+    </Grid>
+</Window>
