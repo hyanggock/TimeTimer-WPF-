@@ -42,10 +42,11 @@
         </Canvas>
         <Canvas x:Name="Setting_Panel" Height="430" Margin="0,2,0,-2" Panel.ZIndex="-1" Visibility="Visible">
             <Label x:Name="Settingtitle" Content="설정" Canvas.Left="167" Canvas.Top="10" Height="42" Width="466" FontStyle="Normal" FontStretch="Condensed" FontWeight="Light" FontSize="24" FontFamily="Microsoft YaHei UI Light" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Label Content="윈도우 시작 시 자동 실행" Canvas.Top="99" Height="46" Width="597" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="20" Background="White" Canvas.Left="167" PreviewMouseLeftButtonDown="Label_PreviewMouseLeftButtonDown_1"/>
-            <Label Content="프로그램 종료 시 트레이르 전환" Canvas.Top="145" Height="46" Width="597" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="20" Canvas.Left="167"/>
+            <Label x:Name="Startup_label" Content="윈도우 시작 시 자동 실행" Canvas.Top="99" Height="46" Width="546" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="20" Background="White" Canvas.Left="167" PreviewMouseLeftButtonDown="Startup_labelPreviewMouseLeftButtonDown_1"/>
+            <Label x:Name="tray_label" Content="프로그램 종료 시 트레이로 전환" Canvas.Top="145" Height="46" Width="546" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="20" Canvas.Left="167"/>
+            <Image x:Name="startup_check_image" Height="30" Canvas.Left="716" Canvas.Top="107" Width="34" Source="/Resources/check.png" Stretch="UniformToFill" HorizontalAlignment="Stretch"/>
         </Canvas>
-        <Image x:Name="hamburgerBtn" Source="/more.png" Margin="10,10,0,392" ClipToBounds="True" Stretch="UniformToFill" MouseLeftButtonDown="hamburgerBtn_MouseLeftButtonDown" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Width="29"/>
+        <Image x:Name="hamburgerBtn" Source="/Resources/more.png" Margin="10,10,0,392" ClipToBounds="True" Stretch="UniformToFill" MouseLeftButtonDown="hamburgerBtn_MouseLeftButtonDown" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Width="29"/>
         <Rectangle x:Name="GreyBackground" HorizontalAlignment="Center" Height="434" Stroke="Black" VerticalAlignment="Center" Width="800" Fill="#FF505050" Opacity="0.2" Visibility="Hidden" MouseLeftButtonDown="GreyBackground_MouseLeftButtonDown">
             <Rectangle.Style>
                 <Style TargetType="{x:Type Rectangle}">

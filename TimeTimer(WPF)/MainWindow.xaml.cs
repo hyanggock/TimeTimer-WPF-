@@ -55,6 +55,7 @@ namespace TimeTimer_WPF_
             //ShowAlarms();
             dClickspeed = 3;
             ni = new System.Windows.Forms.NotifyIcon();
+            ScanStartup();
             try
             {
                 ni.Icon = new System.Drawing.Icon("alarmicon.ico");
@@ -267,15 +268,7 @@ namespace TimeTimer_WPF_
             menupanelanim.Duration = new Duration(TimeSpan.FromMilliseconds(250));
             menupanelanim.Begin();
 
-
-
-            OpacityAnimation greyanimation = new OpacityAnimation(this.GreyBackground);
-            greyanimation.From = 0.2;
-            greyanimation.To = 0;
-            greyanimation.Duration = new Duration(TimeSpan.FromMilliseconds(250));
-            greyanimation.Storyboard.FillBehavior = System.Windows.Media.Animation.FillBehavior.HoldEnd;
-
-            greyanimation.Begin();
+            OpacityIt(GreyBackground, 0.2, 0, 250);
             GreyBackground.IsHitTestVisible = false;
             //Menupanel.Margin = cp;
 
@@ -296,13 +289,14 @@ namespace TimeTimer_WPF_
             menupanelanim.Duration = new Duration(TimeSpan.FromMilliseconds(250));
             menupanelanim.Begin();
 
-            OpacityAnimation greyanimation = new OpacityAnimation(this.GreyBackground);
+            OpacityIt(GreyBackground, 0, 0.2, 250);
+            /*OpacityAnimation greyanimation = new OpacityAnimation(this.GreyBackground);
             greyanimation.From = 0;
             greyanimation.To = 0.2;
             greyanimation.Duration = new Duration(TimeSpan.FromMilliseconds(250));
             greyanimation.Storyboard.FillBehavior = System.Windows.Media.Animation.FillBehavior.HoldEnd;
 
-            greyanimation.Begin();
+            greyanimation.Begin();*/
 
             GreyBackground.Visibility = Visibility.Visible;
             GreyBackground.IsHitTestVisible = true;
@@ -570,18 +564,26 @@ namespace TimeTimer_WPF_
             }
         }
 
-        private void Label_PreviewMouseLeftButtonDown_1(object sender, MouseButtonEventArgs e)
+        private void Startup_labelPreviewMouseLeftButtonDown_1(object sender, MouseButtonEventArgs e)
         {
+            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            Assembly curAssembly = Assembly.GetExecutingAssembly();
             try
             {
-                Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                Assembly curAssembly = Assembly.GetExecutingAssembly();
-                key.SetValue(curAssembly.GetName().Name, curAssembly.Location);
-                key.DeleteValue(curAssembly.GetName().Name);
+                if (key.GetValue(curAssembly.GetName().Name) == null)
+                {
+                    key.SetValue(curAssembly.GetName().Name, curAssembly.Location);
+                }
+                else
+                {
+                    key.DeleteValue(curAssembly.GetName().Name);
+                }
+                ScanStartup();
             }
             catch
             {
                 Console.WriteLine("ERRROR on Startup");
+               
             }
             finally
             {
@@ -589,9 +591,34 @@ namespace TimeTimer_WPF_
             }
         }
 
+        private void ScanStartup()
+        {
+            Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            Assembly curAssembly = Assembly.GetExecutingAssembly();
+            if (key.GetValue(curAssembly.GetName().Name) == null)
+            {
+                OpacityIt(startup_check_image, 0, 1, 150);
+            }
+            else
+            {
+                OpacityIt(startup_check_image, 1, 0, 150);
+            }
+        }
+
         public async Task Animate()
         {
 
+        }
+
+        private void OpacityIt(UIElement targetelement,double from, double to, int duration)
+        {
+            OpacityAnimation targetanimation = new OpacityAnimation(targetelement);
+            targetanimation.From = from;
+            targetanimation.To = to;
+            targetanimation.Duration = new Duration(TimeSpan.FromMilliseconds(duration));
+            targetanimation.Storyboard.FillBehavior = System.Windows.Media.Animation.FillBehavior.HoldEnd;
+
+            targetanimation.Begin();
         }
     }
 
