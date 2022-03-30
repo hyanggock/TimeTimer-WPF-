@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TimeTimer_WPF_"
-        mc:Ignorable="d" Title="AlarmSet" Height="495" Width="420" Closed="Window_Closed" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="#FFFEFEFF">
+        mc:Ignorable="d" Title="AlarmSet" Height="495" Width="420" Closed="Window_Closed" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="#FFFEFEFF" Foreground="Black" BorderThickness="1,1,1,1" SnapsToDevicePixels="True">
 
     <Window.Resources>
         <Style x:Key="FocusVisual">
@@ -18,7 +18,7 @@
         </Style>
     </Window.Resources>
     <Window.Effect>
-        <DropShadowEffect RenderingBias="Performance" Opacity="0.3" BlurRadius="10" ShadowDepth="6"/>
+        <DropShadowEffect/>
     </Window.Effect>
     <Grid x:Name="alarmgrid" Focusable="True" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
         <Grid.RowDefinitions>

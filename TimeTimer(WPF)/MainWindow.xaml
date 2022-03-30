@@ -5,15 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TimeTimer_WPF_"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" WindowStyle="SingleBorderWindow" ResizeMode="NoResize" Closed="Window_Closed">
+        Title="TimeTimer" Height="450" Width="800" WindowStyle="SingleBorderWindow" ResizeMode="NoResize" Closed="Window_Closed">
     <Grid Height="430" Visibility="Visible">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Canvas x:Name="TimePanel" Height="430" Margin="0,2,0,-2" Panel.ZIndex="-1" Visibility="Hidden">
             <Label x:Name="Timetitle" Content="현재 시간" Canvas.Left="167" Canvas.Top="10" Height="42" Width="466" FontStyle="Normal" FontStretch="Condensed" FontWeight="Light" FontSize="24" FontFamily="Microsoft YaHei UI Light" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Label x:Name="TimeLabel" Content="label" Canvas.Left="167" Canvas.Top="122" Height="77" Width="466" FontStyle="Normal" FontStretch="Condensed" FontWeight="Light" FontSize="48" FontFamily="Microsoft YaHei UI Light" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Label x:Name="dateLabel" Content="Label" Canvas.Left="167" Canvas.Top="96" Height="26" Width="466" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
+            <Label x:Name="TimeLabel" Content="label" Canvas.Left="251" Canvas.Top="113" Height="77" Width="382" FontStyle="Normal" FontStretch="Condensed" FontWeight="Light" FontSize="48" FontFamily="SLABS THIN" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+            <Label x:Name="dateLabel" Content="Label" Canvas.Left="251" Canvas.Top="82" Height="26" Width="382" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="14"/>
         </Canvas>
         <Canvas x:Name="Alarm_Panel" Height="430" Margin="0,2,0,-2" Panel.ZIndex="-1" Visibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
             <Label x:Name="Add_alarm_btn" Content="알람추가" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="0,0,636,278" MouseLeftButtonDown="Add_alarm_btn_MouseLeftButtonDown" Canvas.Top="62" Width="160" Height="50"/>
@@ -43,8 +46,9 @@
         <Canvas x:Name="Setting_Panel" Height="430" Margin="0,2,0,-2" Panel.ZIndex="-1" Visibility="Visible">
             <Label x:Name="Settingtitle" Content="설정" Canvas.Left="167" Canvas.Top="10" Height="42" Width="466" FontStyle="Normal" FontStretch="Condensed" FontWeight="Light" FontSize="24" FontFamily="Microsoft YaHei UI Light" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <Label x:Name="Startup_label" Content="윈도우 시작 시 자동 실행" Canvas.Top="99" Height="46" Width="546" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="20" Background="White" Canvas.Left="167" PreviewMouseLeftButtonDown="Startup_labelPreviewMouseLeftButtonDown_1"/>
-            <Label x:Name="tray_label" Content="프로그램 종료 시 트레이로 전환" Canvas.Top="145" Height="46" Width="546" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="20" Canvas.Left="167"/>
-            <Image x:Name="startup_check_image" Height="30" Canvas.Left="716" Canvas.Top="107" Width="34" Source="/Resources/check.png" Stretch="UniformToFill" HorizontalAlignment="Stretch"/>
+            <Label x:Name="tray_label" Content="프로그램 종료 시 트레이로 전환" Canvas.Top="145" Height="46" Width="546" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="20" Canvas.Left="167" PreviewMouseLeftButtonDown="tray_label_PreviewMouseLeftButtonDown"/>
+            <Image x:Name="startup_check_image" Height="42" Canvas.Left="716" Canvas.Top="99" Width="34" Source="/Resources/check.png" Stretch="Uniform"/>
+            <Image x:Name="tray_check_image" Height="42" Canvas.Left="716" Canvas.Top="145" Width="34" Source="/Resources/check.png" Stretch="Uniform"/>
         </Canvas>
         <Image x:Name="hamburgerBtn" Source="/Resources/more.png" Margin="10,10,0,392" ClipToBounds="True" Stretch="UniformToFill" MouseLeftButtonDown="hamburgerBtn_MouseLeftButtonDown" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Width="29"/>
         <Rectangle x:Name="GreyBackground" HorizontalAlignment="Center" Height="434" Stroke="Black" VerticalAlignment="Center" Width="800" Fill="#FF505050" Opacity="0.2" Visibility="Hidden" MouseLeftButtonDown="GreyBackground_MouseLeftButtonDown">
@@ -58,21 +62,24 @@
                 </Style>
             </Rectangle.Style>
         </Rectangle>
-        <StackPanel x:Name="Menupanel" Margin="-230,0,800,-2" Background="#FFF4F9F9" Width="230" Panel.ZIndex="10" ScrollViewer.VerticalScrollBarVisibility="Auto" RenderTransformOrigin="0.5,0.5">
-            <StackPanel.RenderTransform>
+        <Canvas x:Name="Menupanel" Margin="-230,0,800,-2" Background="#FFF4F9F9" Width="230" Panel.ZIndex="10" ScrollViewer.VerticalScrollBarVisibility="Auto" RenderTransformOrigin="0.5,0.5" FlowDirection="RightToLeft">
+            <Canvas.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
                     <RotateTransform/>
                     <TranslateTransform X="1"/>
                 </TransformGroup>
-            </StackPanel.RenderTransform>
-            <Label Content="TimeTimer" Height="42" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="22" FontWeight="Bold"/>
-            <Label x:Name="Current_time" Content="현재 시간" Height="41" VerticalAlignment="Center" VerticalContentAlignment="Center" MouseLeftButtonDown="Current_time_MouseLeftButtonDown"/>
-            <Label x:Name="Current_time_Copy" Content="알람" Height="41" VerticalContentAlignment="Center" MouseLeftButtonDown="Current_time_Copy_MouseLeftButtonDown"/>
-            <Label x:Name="Current_time_Copy1" Content="설정" Height="41" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" VerticalAlignment="Bottom" PreviewMouseLeftButtonDown="Current_time_Copy1_PreviewMouseLeftButtonDown"/>
+            </Canvas.RenderTransform>
+            <Label Content="TimeTimer" Height="42" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="22" FontWeight="Bold" Canvas.Left="109" Canvas.Top="-1"/>
+            <Label x:Name="Current_time" Content="현재 시간" Height="41" VerticalContentAlignment="Center" MouseLeftButtonDown="Current_time_MouseLeftButtonDown" MouseLeave="MousepointerLeave" MouseEnter="MenupointerEnter" Canvas.Top="46" Width="230" HorizontalContentAlignment="Left" FlowDirection="LeftToRight" Tag="menu_1"/>
+            <Label x:Name="menu_Alarm" Content="알람" Height="41" VerticalContentAlignment="Center" MouseLeftButtonDown="Current_time_Copy_MouseLeftButtonDown" Canvas.Top="87" Width="230" HorizontalContentAlignment="Left" FlowDirection="LeftToRight" Tag="menu_2" MouseLeave="MousepointerLeave" MouseEnter="MenupointerEnter"/>
+            <Label x:Name="menu_setting" Content="설정" Height="41" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" PreviewMouseLeftButtonDown="Current_time_Copy1_PreviewMouseLeftButtonDown" Canvas.Top="128" Width="230" FlowDirection="LeftToRight" Tag="menu_3" MouseLeave="MousepointerLeave" MouseEnter="MenupointerEnter"/>
+            <Rectangle x:Name="Cur_time_rect" Height="41" Canvas.Top="46" Width="230" Fill="#66B1B1B1" IsEnabled="False" IsHitTestVisible="False" Tag="menu_1" Opacity="0" MouseEnter="MenupointerEnter"/>
+            <Rectangle x:Name="Alarm_rect" Height="40" Canvas.Top="87" Width="230" Fill="#66B1B1B1" IsEnabled="False" IsHitTestVisible="False" Tag="menu_2" Opacity="0"/>
+            <Rectangle x:Name="Setting_Rect" Height="42" Canvas.Top="128" Width="230" Fill="#66B1B1B1" IsEnabled="False" IsHitTestVisible="False" Tag="menu_3" Opacity="0"/>
 
-        </StackPanel>
+        </Canvas>
 
     </Grid>
 </Window>

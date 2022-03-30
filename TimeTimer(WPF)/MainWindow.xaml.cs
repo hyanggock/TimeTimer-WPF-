@@ -1,9 +1,11 @@
-﻿using Microsoft.Toolkit.Uwp.Notifications;
+﻿using Hardcodet.Wpf.TaskbarNotification;
+using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,8 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Serialization;
-using Hardcodet.Wpf.TaskbarNotification;
-using System.Reflection;
+//using System.Windows.Forms;
 
 //using System.Xaml;
 
@@ -37,7 +38,9 @@ namespace TimeTimer_WPF_
         AlarmData alData = new AlarmData();
         Stopwatch sw = new Stopwatch();
         TaskbarIcon tbi = new TaskbarIcon();
+        SaveProperties sP = new SaveProperties();
         System.Windows.Forms.NotifyIcon ni;
+        Rectangle[] menus = new Rectangle[3];
         int selectedIndex;
         int dClickspeed;
         int dClickCounter = 0;
@@ -47,30 +50,21 @@ namespace TimeTimer_WPF_
         public MainWindow()
         {
             InitializeComponent();
+            menus[0] = Cur_time_rect;
+            menus[1] = Alarm_rect;
+            menus[2] = Setting_Rect;
             alarmDatas = DeSerializeAlObjs();
             RefreshAllAlarmObject();
             cp = Menupanel.Margin;
             cp2 = new Thickness(0, 0, 570, 0);
+            sP = deSerializeProperties();
             Dtimer_start();
             //ShowAlarms();
             dClickspeed = 3;
             ni = new System.Windows.Forms.NotifyIcon();
             ScanStartup();
-            try
-            {
-                ni.Icon = new System.Drawing.Icon("alarmicon.ico");
-                ni.Visible = true;
-                ni.DoubleClick += delegate (object sender, EventArgs e)
-                {
-                    this.Show();
-                    this.WindowState = WindowState.Normal;
-                };
-                ni.Text = "TimeTimer";
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+            ScanTray();
+
         }
         public void TestFunction(string title)
         {
@@ -314,16 +308,46 @@ namespace TimeTimer_WPF_
         private void Current_time_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             movepanel(1);
+            Label tempUIobj = sender as Label;
+            string sendertag = tempUIobj.Tag as string;
+            for (int i = 0; i < 3; i++)
+            {
+                string menutag = menus[i].Tag as string;
+                if (sendertag == menutag)
+                {
+                    OpacityIt(menus[i], 0.5, 1, 50);
+                }
+            }
             GreyBackground_MouseLeftButtonDown(sender, e);
         }
         private void Current_time_Copy_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             movepanel(2);
+            Label tempUIobj = sender as Label;
+            string sendertag = tempUIobj.Tag as string;
+            for (int i = 0; i < 3; i++)
+            {
+                string menutag = menus[i].Tag as string;
+                if (sendertag == menutag)
+                {
+                    OpacityIt(menus[i], 0.5, 1, 50);
+                }
+            }
             GreyBackground_MouseLeftButtonDown(sender, e);
         }
         private void Current_time_Copy1_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             movepanel(3);
+            Label tempUIobj = sender as Label;
+            string sendertag = tempUIobj.Tag as string;
+            for (int i = 0; i < 3; i++)
+            {
+                string menutag = menus[i].Tag as string;
+                if (sendertag == menutag)
+                {
+                    OpacityIt(menus[i], 0.5, 1, 50);
+                }
+            }
             GreyBackground_MouseLeftButtonDown(sender, e);
         }
         private void Add_alarm_btn_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -457,6 +481,12 @@ namespace TimeTimer_WPF_
                 XmlSerializer serializer = new XmlSerializer(typeof(List<AlarmData>));
                 serializer.Serialize(wr, alObjList);
             }
+            Stream settingDataStream = new FileStream("Personaldata.xml", FileMode.Create);
+            using (StreamWriter wr = new StreamWriter(settingDataStream))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(SaveProperties));
+                serializer.Serialize(wr, sP);
+            }
         }
         private List<AlarmData> DeSerializeAlObjs()
         {
@@ -470,7 +500,20 @@ namespace TimeTimer_WPF_
                     temp = (List<AlarmData>)serializer.Deserialize(reader);
                 }
             }
-
+            return temp;
+        }
+        private SaveProperties deSerializeProperties()
+        {
+            SaveProperties temp = new SaveProperties();
+            if (File.Exists("Personaldata.xml"))
+            {
+                Stream dataStream = new FileStream("Personaldata.xml", FileMode.Open);
+                using (var reader = new StreamReader(dataStream))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(SaveProperties));
+                    temp = (SaveProperties)serializer.Deserialize(reader);
+                }
+            }
             return temp;
         }
         void Cmd_manager(string command)
@@ -539,6 +582,7 @@ namespace TimeTimer_WPF_
                 }
             }
         }
+        
         private void Notibtn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             TestFunction("example");
@@ -549,10 +593,14 @@ namespace TimeTimer_WPF_
             Cmd_manager("taskmgr");
         }
 
+        [Obsolete]
         private void Window_Closed(object sender, EventArgs e)
         {
-            SerializeAlObjs(alarmDatas);
-            Environment.Exit(0);
+            if (!sP.isTray)
+            {
+                SerializeAlObjs(alarmDatas);
+                Environment.Exit(0);
+            }
         }
 
         private void Label_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -583,7 +631,7 @@ namespace TimeTimer_WPF_
             catch
             {
                 Console.WriteLine("ERRROR on Startup");
-               
+
             }
             finally
             {
@@ -605,12 +653,7 @@ namespace TimeTimer_WPF_
             }
         }
 
-        public async Task Animate()
-        {
-
-        }
-
-        private void OpacityIt(UIElement targetelement,double from, double to, int duration)
+        private void OpacityIt(UIElement targetelement, double from, double to, int duration)
         {
             OpacityAnimation targetanimation = new OpacityAnimation(targetelement);
             targetanimation.From = from;
@@ -620,6 +663,95 @@ namespace TimeTimer_WPF_
 
             targetanimation.Begin();
         }
+
+        private void tray_label_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            sP.isTray = !sP.isTray;
+            ScanTray();
+        }
+
+        private void ScanTray()
+        {
+            if (sP.isTray)
+            {
+                OpacityIt(tray_check_image, 0, 1, 150);
+            }
+            else
+            {
+                OpacityIt(tray_check_image, 1, 0, 150);
+            }
+        }
+
+        private void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (sP.isTray)
+            {
+                e.Cancel = true;
+
+                this.Hide();
+                base.OnClosed(e);
+            }
+        }
+        protected override void OnStateChanged(EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized) this.Hide();
+            base.OnStateChanged(e);
+        }
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (sP.isTray)
+            {
+
+                try
+                {
+                    ni.Icon = new System.Drawing.Icon("alarmicon.ico");
+                    ni.Visible = true;
+                    ni.DoubleClick += delegate (object sender, EventArgs e)
+                    {
+                        this.Show();
+                        this.WindowState = WindowState.Normal;
+                    };
+                    ni.Text = "TimeTimer";
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+                e.Cancel = true;
+
+                this.Hide();
+                base.OnClosed(e);
+            }
+        }
+
+        private void MousepointerLeave(object sender, MouseEventArgs e)
+        {
+            Label tempUIobj = sender as Label;
+            string sendertag = tempUIobj.Tag as string;
+            for (int i = 0; i < 3; i++)
+            {
+                string menutag = menus[i].Tag as string;
+                if (sendertag == menutag)
+                {
+                    OpacityIt(menus[i], 0.5, 0, 150);
+                }
+            }
+        }
+
+        private void MenupointerEnter(object sender, MouseEventArgs e)
+        {
+            Label tempUIobj = sender as Label;
+            string sendertag = tempUIobj.Tag as string;
+            for (int i = 0; i < 3; i++)
+            {
+                string menutag=menus[i].Tag as string;
+                if (sendertag == menutag)
+                {
+                    OpacityIt(menus[i], 0, 0.5, 150);
+                }
+            }
+        }
+
     }
 
 

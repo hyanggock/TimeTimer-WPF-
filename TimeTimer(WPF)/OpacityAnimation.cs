@@ -19,6 +19,7 @@ namespace TimeTimer_WPF_
             animation = new DoubleAnimation();
             Storyboard.SetTargetProperty(animation, new PropertyPath("(UIElement.Opacity)"));
             Storyboard.Children.Add(animation);
+           
         }
         public override void Begin()
         {
